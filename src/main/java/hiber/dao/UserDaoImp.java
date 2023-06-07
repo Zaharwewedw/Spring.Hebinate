@@ -29,19 +29,11 @@ public class UserDaoImp implements UserDao {
 
    @Override
    public User findOwnerByCar(String car_model, int car_series) {
-      EntityManager entityManager = sessionFactory.createEntityManager();
-      try {
-         TypedQuery<User> query = entityManager
-                 .createQuery("SELECT u FROM User u JOIN u.car m WHERE m.model = :model AND m.series =: series", User.class)
-                 .setParameter("model", car_model)
-                 .setParameter("series", car_series);
-         List<User> userList = query.getResultList();
-         if (!userList.isEmpty()) {
-            return userList.get(0);
-         }
-      } finally {
-         entityManager.close();
-      }
-      return new User();
+      EntityManager entityManager = sessionFactory.getCurrentSession();
+      TypedQuery<User> query = entityManager
+              .createQuery("SELECT u FROM User u JOIN FETCH u.car m WHERE m.model = :model AND m.series =: series", User.class)
+              .setParameter("model", car_model)
+              .setParameter("series", car_series);
+      return query.getSingleResult();
    }
 }

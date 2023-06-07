@@ -27,6 +27,10 @@ public class User {
    @OneToOne
    private Car car;
 
+   public void setCar(Car car) {
+      this.car = car;
+   }
+
    public User() {
    }
 
